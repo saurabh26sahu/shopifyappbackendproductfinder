@@ -33,21 +33,31 @@
     	die("Connection failed: " . mysqli_connect_error());
 		}
 
-		//Data Insertion Starts
-		if(is_array($product_title)){
-    	foreach ($product_title as $row) {      
-        $query ="INSERT INTO products_data (title) VALUES ( '". $row."')";
-        mysqli_query($conn, $query);
-    	}
-	}
+		if(is_array($products)){
 
-  	if (mysqli_query($conn, $query)) 
+    $DataArr = array();
+    foreach($products as $row => $rowvalue){
+    	
+        $fieldVal1 = mysql_real_escape_string($products[$row]['title']);
+        $fieldVal2 = mysql_real_escape_string($products[$row]['tags']);
+        $fieldVal3 = mysql_real_escape_string($products[$row]['handle']);
+        $fieldVal4 = mysql_real_escape_string($products[$row]['product_type']);
+
+        $DataArr[] = "('$fieldVal1', '$fieldVal2', '$fieldVal3','$fieldVal4')";
+    }
+
+    $sql = "INSERT INTO products_data (title, tags, handle, product_type) values ";
+    $sql .= implode(',', $DataArr);
+
+    mysqli_query($conn, $sql); 
+}
+  	if (mysqli_query($conn, $sql)) 
 	{
     echo "App Data Inserted Successfully";
     } 
 
 	else {
-    echo "Error: " . $query . "<br>" . mysqli_error($conn);
+    echo "Error: " . $sql . "<br>" . mysqli_error($conn);
     }
 
 	mysqli_close($conn);

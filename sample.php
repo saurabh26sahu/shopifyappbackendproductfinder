@@ -1,4 +1,5 @@
-<?php 
+<?php
+//Titile Insertion working here.... 
 	session_start();
 
 	require __DIR__.'/vendor/autoload.php';
@@ -20,68 +21,40 @@
 		$title_tags = implode(',', $product_tags);
 		$product_type = array_column($products, 'product_type');
 		$title_type = implode(',', $product_type);
-		//echo $string_version;
-		//echo "<pre>";
-		//print_r($string_version);
-		// $product_handle = array_column($products, 'handle');
-		// echo "<pre>";
-		// print_r($product_handle);
-		// $product_tags = array_column($products, 'tags');
-		// echo "<pre>";
-		// print_r($product_tags);
-		// $product_type = array_column($products, 'product_type');
-		// echo "<pre>";
-		// print_r($product_type);
-// 		$servername = "localhost";
-//         $username = "root";
-//         $password = "";
-//         $dbname = "shopifyapp";
+		//Mysql Connection Starts
+		$servername = "localhost";
+		$username = "root";
+		$password = "";
+		$dbname = "shopifyapp";
 
-//         // Create connection
-//         $conn = new mysqli($servername, $username, $password, $dbname);
+     	// Create connection
+		$conn = mysqli_connect($servername, $username, $password, $dbname);
+		// Check connection
+		if (!$conn) {
+    	die("Connection failed: " . mysqli_connect_error());
+		}
 
-//         // Check connection
-//        if ($conn->connect_error) {
-//        die("Connection failed: " . $conn->connect_error);
-//         } 
-//       echo "Connected successfully";
-//         $sql = "INSERT INTO products_data(title,product_type,handle,tags)
-// VALUES ($title_title,$title_type,$title_handle,$title_tags)";
-// if ($conn->query($sql) === TRUE) {
-//     echo "New record created successfully";
-// } else {
-//     echo "Error: " . $sql . "<br>" . $conn->error;
-// }
+		//Data Insertion Starts
+		if(is_array($product_title)){
+    	foreach ($product_title as $row) {      
+        $query ="INSERT INTO products_data (title) VALUES ( '". $row."')";
+        mysqli_query($conn, $query);
+    	}
+	}
 
-// $conn->close();
+  	if (mysqli_query($conn, $query)) 
+	{
+    echo "App Data Inserted Successfully";
+    } 
 
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "shopifyapp";
+	else {
+    echo "Error: " . $query . "<br>" . mysqli_error($conn);
+    }
 
-// Create connection
-$conn = mysqli_connect($servername, $username, $password, $dbname);
-// Check connection
-if (!$conn) {
-    die("Connection failed: " . mysqli_connect_error());
-}
-
-$sql = "INSERT INTO products_data(title,product_type,handle,tags)
-VALUES ($title_title,$title_type,$title_handle,$title_tags)";
-
-if (mysqli_query($conn, $sql)) {
-    echo "New record created successfully";
-} else {
-    echo "Error: " . $sql . "<br>" . mysqli_error($conn);
-}
-
-mysqli_close($conn);
-
-		// echo "<pre>";
-		// print_r($products);
+	mysqli_close($conn);
 
 	}
+
 	catch (shopify\ApiException $e)
 	{
 		# HTTP status code was >= 400 or response contained the key 'errors'

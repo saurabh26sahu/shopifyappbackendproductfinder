@@ -57,8 +57,6 @@ if(is_array($product_title)){
 //$data = implode(',', $DataArr);
     	$title_title = implode(',', $product_title);
    //echo $data;
-
-    
         
     }
     $sql = "INSERT INTO products_data (title) values ($title_title)";
